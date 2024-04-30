@@ -3,9 +3,10 @@ import keras, cv2, numpy, sys
 from keras.datasets.mnist import load_data
 (features_train, labels_train), (features_test, labels_test) = load_data()
 labels_train = numpy.identity(10)[labels_train]  # 10x10 identity matrix
+features_train = (features_train - features_train.mean()) / features_train.std()
 
 SAVE_WEIGHTS = False
-LOAD_MODEL = True
+LOAD_MODEL = not SAVE_WEIGHTS
 DNN_TYPE = "CNN"  # DNN, RNN, CNN, ResNet
 WEIGHTS_FILENAME = f"{sys.argv[0].replace('.py', '')}_{DNN_TYPE}.h5" 
 CNN_LAYERS = 2 # if using CNN
@@ -52,7 +53,6 @@ else:
 	model.add(keras.layers.Flatten())			  # 784 element array
 	model.add(keras.layers.Dense(100, "relu"))    # 100 neurons, w/ ea. 1 bias  [78 400 + 100]
 	model.add(keras.layers.Dense(10, "softmax"))  # 10 output characters 0-9
-
 
 	model.compile(
 		optimizer="adam", 
